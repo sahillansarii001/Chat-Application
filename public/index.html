@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatFlow - Team Messaging Platform</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: #1a1d21;
+        height: 100vh;
+        overflow: hidden;
+        color: #e4e6eb;
+      }
+
+      .platform-container {
+        display: grid;
+        grid-template-columns: 280px 1fr 300px;
+        height: 100vh;
+      }
+
+      /* Left Sidebar - Channels */
+      .sidebar-left {
+        background: #232529;
+        border-right: 1px solid #36393f;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .workspace-header {
+        padding: 20px;
+        background: #1a1d21;
+        border-bottom: 1px solid #36393f;
+      }
+
+      .workspace-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .workspace-status {
+        font-size: 13px;
+        color: #b9bbbe;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #43b581;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .channels-section {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 0;
+      }
+
+      .channels-section::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .channels-section::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .channels-section::-webkit-scrollbar-thumb {
+        background: #36393f;
+        border-radius: 4px;
+      }
+
+      .channel-category {
+        margin-bottom: 20px;
+      }
+
+      .category-title {
+        padding: 6px 20px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #8e9297;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .category-title:hover {
+        color: #b9bbbe;
+      }
+
+      .channel-item {
+        padding: 8px 20px;
+        margin: 2px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        font-size: 15px;
+        color: #b9bbbe;
+      }
+
+      .channel-item:hover {
+        background: #36393f;
+        color: #fff;
+      }
+
+      .channel-item.active {
+        background: #404449;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .channel-icon {
+        font-size: 18px;
+        opacity: 0.7;
+      }
+
+      .user-profile {
+        padding: 12px 16px;
+        background: #1a1d21;
+        border-top: 1px solid #36393f;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+      }
+
+      .user-info {
+        flex: 1;
+      }
+
+      .user-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .user-status {
+        font-size: 12px;
+        color: #b9bbbe;
+      }
+
+      .user-settings {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-size: 18px;
+      }
+
+      .user-settings:hover {
+        background: #36393f;
+      }
+
+      /* Main Chat Area */
+      .chat-main {
+        background: #2b2d31;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-header {
+        height: 60px;
+        background: #232529;
+        border-bottom: 1px solid #36393f;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .channel-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .channel-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .channel-description {
+        font-size: 13px;
+        color: #b9bbbe;
+        margin-left: 8px;
+        padding-left: 8px;
+        border-left: 1px solid #36393f;
+      }
+
+      .chat-actions {
+        display: flex;
+        gap: 12px;
+      }
+
+      .action-button {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        background: transparent;
+        border: none;
+        color: #b9bbbe;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: all 0.2s;
+      }
+
+      .action-button:hover {
+        background: #36393f;
+        color: #fff;
+      }
+
+      .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+      }
+
+      .messages-container::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .messages-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb {
+        background: #36393f;
+        border-radius: 5px;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb:hover {
+        background: #404449;
+      }
+
+      .message {
+        display: flex;
+        gap: 16px;
+        padding: 8px 16px;
+        margin-bottom: 4px;
+        border-radius: 6px;
+        transition: background 0.1s;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message:hover {
+        background: #2e3035;
+      }
+
+      .message-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .message-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .message-header {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .message-author {
+        font-weight: 600;
+        color: #fff;
+        font-size: 15px;
+      }
+
+      .message-time {
+        font-size: 12px;
+        color: #8e9297;
+      }
+
+      .message-text {
+        color: #e4e6eb;
+        font-size: 15px;
+        line-height: 1.5;
+        word-wrap: break-word;
+      }
+
+      .message-input-container {
+        padding: 24px;
+        background: #232529;
+      }
+
+      .message-input-wrapper {
+        background: #36393f;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .message-input-wrapper:focus-within {
+        background: #404449;
+        border-color: #5865f2;
+      }
+
+      .input-actions-left {
+        display: flex;
+        gap: 8px;
+      }
+
+      .input-action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: transparent;
+        border: none;
+        color: #b9bbbe;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: all 0.2s;
+      }
+
+      .input-action-btn:hover {
+        background: #4e5058;
+        color: #fff;
+      }
+
+      .message-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #e4e6eb;
+        font-size: 15px;
+        outline: none;
+        font-family: inherit;
+      }
+
+      .message-input::placeholder {
+        color: #6d6f78;
+      }
+
+      .send-btn {
+        background: linear-gradient(135deg, #5865f2 0%, #7289da 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+      }
+
+      .send-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
+      }
+
+      .send-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Right Sidebar - Members */
+      .sidebar-right {
+        background: #232529;
+        border-left: 1px solid #36393f;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .members-header {
+        padding: 20px;
+        background: #1a1d21;
+        border-bottom: 1px solid #36393f;
+      }
+
+      .members-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .members-count {
+        font-size: 12px;
+        color: #b9bbbe;
+        margin-top: 4px;
+      }
+
+      .members-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 0;
+      }
+
+      .members-list::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .members-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .members-list::-webkit-scrollbar-thumb {
+        background: #36393f;
+        border-radius: 4px;
+      }
+
+      .member-category {
+        margin-bottom: 16px;
+      }
+
+      .member-category-title {
+        padding: 6px 20px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #8e9297;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .member-item {
+        padding: 8px 20px;
+        margin: 2px 8px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .member-item:hover {
+        background: #36393f;
+      }
+
+      .member-avatar-wrapper {
+        position: relative;
+      }
+
+      .member-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+      }
+
+      .member-status {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #43b581;
+        border: 2px solid #232529;
+      }
+
+      .member-status.away {
+        background: #faa61a;
+      }
+
+      .member-status.offline {
+        background: #747f8d;
+      }
+
+      .member-name {
+        font-size: 14px;
+        color: #e4e6eb;
+        font-weight: 500;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #8e9297;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+      }
+
+      .empty-state-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #b9bbbe;
+      }
+
+      .empty-state-text {
+        font-size: 14px;
+        color: #8e9297;
+      }
+
+      /* Welcome Screen */
+      .welcome-screen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .welcome-screen.active {
+        display: flex;
+      }
+
+      .welcome-box {
+        background: #232529;
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 480px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: scaleIn 0.3s ease;
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .welcome-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+
+      .welcome-subtitle {
+        font-size: 15px;
+        color: #b9bbbe;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      .welcome-input-group {
+        margin-bottom: 24px;
+      }
+
+      .welcome-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #b9bbbe;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .welcome-input {
+        width: 100%;
+        padding: 14px 16px;
+        background: #1a1d21;
+        border: 2px solid #36393f;
+        border-radius: 8px;
+        color: #e4e6eb;
+        font-size: 15px;
+        transition: all 0.2s;
+      }
+
+      .welcome-input:focus {
+        outline: none;
+        border-color: #5865f2;
+        background: #2b2d31;
+      }
+
+      .welcome-button {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #5865f2 0%, #7289da 100%);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .welcome-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 1024px) {
+        .platform-container {
+          grid-template-columns: 240px 1fr;
+        }
+
+        .sidebar-right {
+          display: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .platform-container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar-left {
+          position: fixed;
+          left: -280px;
+          top: 0;
+          bottom: 0;
+          width: 280px;
+          z-index: 100;
+          transition: left 0.3s;
+        }
+
+        .sidebar-left.mobile-open {
+          left: 0;
+        }
+
+        .mobile-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 99;
+        }
+
+        .mobile-overlay.active {
+          display: block;
+        }
+
+        .channel-description {
+          display: none;
+        }
+
+        .send-btn span {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Welcome Screen -->
+    <div class="welcome-screen active" id="welcomeScreen">
+      <div class="welcome-box">
+        <h1 class="welcome-title">👋 Welcome to ChatFlow</h1>
+        <p class="welcome-subtitle">Enter your name to start chatting with your team</p>
+        <div class="welcome-input-group">
+          <label class="welcome-label">Username</label>
+          <input
+            type="text"
+            class="welcome-input"
+            id="welcomeNameInput"
+            placeholder="Enter your username"
+            maxlength="30"
+          />
+        </div>
+        <button class="welcome-button" onclick="joinChat()">Join Chat</button>
+      </div>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileSidebar()"></div>
+
+    <div class="platform-container">
+      <!-- Left Sidebar -->
+      <aside class="sidebar-left" id="sidebarLeft">
+        <div class="workspace-header">
+          <div class="workspace-name">
+            <span>💼</span>
+            <span>ChatFlow Workspace</span>
+          </div>
+          <div class="workspace-status">
+            <span class="status-dot"></span>
+            <span id="connectionStatus">Connected</span>
+          </div>
+        </div>
+
+        <div class="channels-section">
+          <div class="channel-category">
+            <div class="category-title">
+              <span>▼</span>
+              <span>Text Channels</span>
+            </div>
+            <div class="channel-item active" onclick="switchChannel('general')">
+              <span class="channel-icon">#</span>
+              <span>general</span>
+            </div>
+            <div class="channel-item" onclick="switchChannel('random')">
+              <span class="channel-icon">#</span>
+              <span>random</span>
+            </div>
+            <div class="channel-item" onclick="switchChannel('announcements')">
+              <span class="channel-icon">📢</span>
+              <span>announcements</span>
+            </div>
+          </div>
+
+          <div class="channel-category">
+            <div class="category-title">
+              <span>▼</span>
+              <span>Voice Channels</span>
+            </div>
+            <div class="channel-item">
+              <span class="channel-icon">🔊</span>
+              <span>General Voice</span>
+            </div>
+            <div class="channel-item">
+              <span class="channel-icon">🔊</span>
+              <span>Meeting Room</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-profile">
+          <div class="user-avatar" id="userAvatarLeft">?</div>
+          <div class="user-info">
+            <div class="user-name" id="currentUserName">Guest</div>
+            <div class="user-status">🟢 Online</div>
+          </div>
+          <div class="user-settings">⚙️</div>
+        </div>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <main class="chat-main">
+        <header class="chat-header">
+          <div class="channel-info">
+            <button class="action-button" style="display: none;" id="mobileMenuBtn" onclick="toggleMobileSidebar()">
+              ☰
+            </button>
+            <div class="channel-name">
+              <span>#</span>
+              <span id="currentChannelName">general</span>
+            </div>
+            <div class="channel-description">Team discussions and updates</div>
+          </div>
+          <div class="chat-actions">
+            <button class="action-button" title="Search">🔍</button>
+            <button class="action-button" title="Notifications">🔔</button>
+            <button class="action-button" title="Members">👥</button>
+          </div>
+        </header>
+
+        <div class="messages-container" id="messagesContainer">
+          <div class="empty-state">
+            <div class="empty-state-icon">💬</div>
+            <div class="empty-state-title">Welcome to #general</div>
+            <div class="empty-state-text">This is the start of the conversation. Say hello!</div>
+          </div>
+        </div>
+
+        <div class="message-input-container">
+          <div class="message-input-wrapper">
+            <div class="input-actions-left">
+              <button class="input-action-btn" title="Upload file">📎</button>
+              <button class="input-action-btn" title="Emoji">😊</button>
+              <button class="input-action-btn" title="GIF">GIF</button>
+            </div>
+            <input
+              type="text"
+              class="message-input"
+              id="messageInput"
+              placeholder="Message #general"
+              maxlength="500"
+            />
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+              <span>Send</span>
+              <span>➤</span>
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Sidebar - Members -->
+      <aside class="sidebar-right">
+        <div class="members-header">
+          <div class="members-title">Members</div>
+          <div class="members-count" id="membersCount">1 Online</div>
+        </div>
+
+        <div class="members-list" id="membersList">
+          <div class="member-category">
+            <div class="member-category-title">Online — 1</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script>
+      const ws = new WebSocket("ws://192.168.13.145:3000/");
+      const messagesContainer = document.getElementById("messagesContainer");
+      const messageInput = document.getElementById("messageInput");
+      const welcomeScreen = document.getElementById("welcomeScreen");
+      const welcomeNameInput = document.getElementById("welcomeNameInput");
+      
+      let currentUser = "";
+      let messageCount = 0;
+      let currentChannel = "general";
+      const onlineUsers = new Set();
+
+      // Load saved username
+      const savedUsername = localStorage.getItem("chatflow_username");
+      if (savedUsername) {
+        welcomeNameInput.value = savedUsername;
+      }
+
+      // Join chat function
+      function joinChat() {
+        const username = welcomeNameInput.value.trim();
+        if (!username) {
+          welcomeNameInput.focus();
+          welcomeNameInput.style.borderColor = "#ed4245";
+          setTimeout(() => {
+            welcomeNameInput.style.borderColor = "#36393f";
+          }, 2000);
+          return;
+        }
+
+        currentUser = username;
+        localStorage.setItem("chatflow_username", username);
+        
+        // Update UI
+        document.getElementById("currentUserName").textContent = username;
+        document.getElementById("userAvatarLeft").textContent = username.charAt(0).toUpperCase();
+        
+        // Hide welcome screen
+        welcomeScreen.classList.remove("active");
+        messageInput.focus();
+
+        // Add user to members list
+        addMemberToList(username, true);
+      }
+
+      // WebSocket message handler
+      ws.onmessage = (e) => {
+        if (messageCount === 0) {
+          messagesContainer.innerHTML = "";
+        }
+        messageCount++;
+
+        const messageData = e.data;
+        const colonIndex = messageData.indexOf(':');
+        
+        if (colonIndex > 0) {
+          const username = messageData.substring(0, colonIndex).trim();
+          const message = messageData.substring(colonIndex + 1).trim();
+          
+          addMessage(username, message);
+          
+          // Add user to online list if not exists
+          if (!onlineUsers.has(username) && username !== currentUser) {
+            addMemberToList(username, true);
+          }
+        }
+      };
+
+      // Add message to chat
+      function addMessage(username, text) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message";
+        
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        messageDiv.innerHTML = `
+          <div class="message-avatar">${username.charAt(0).toUpperCase()}</div>
+          <div class="message-content">
+            <div class="message-header">
+              <span class="message-author">${username}</span>
+              <span class="message-time">${timeString}</span>
+            </div>
+            <div class="message-text">${text}</div>
+          </div>
+        `;
+        
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // Send message
+      function sendMessage() {
+        if (!currentUser) {
+          welcomeScreen.classList.add("active");
+          welcomeNameInput.focus();
+          return;
+        }
+
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        ws.send(`${currentUser}: ${message}`);
+        messageInput.value = "";
+        messageInput.focus();
+      }
+
+      // Enter key to send
+      messageInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      // Welcome screen enter key
+      welcomeNameInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          joinChat();
+        }
+      });
+
+      // Add member to list
+      function addMemberToList(username, isOnline) {
+        if (onlineUsers.has(username)) return;
+        
+        onlineUsers.add(username);
+        const membersList = document.getElementById("membersList");
+        
+        // Find or create online category
+        let onlineCategory = membersList.querySelector('.member-category');
+        if (!onlineCategory) {
+          onlineCategory = document.createElement('div');
+          onlineCategory.className = 'member-category';
+          onlineCategory.innerHTML = '<div class="member-category-title">Online — 0</div>';
+          membersList.appendChild(onlineCategory);
+        }
+
+        const memberItem = document.createElement("div");
+        memberItem.className = "member-item";
+        memberItem.innerHTML = `
+          <div class="member-avatar-wrapper">
+            <div class="member-avatar">${username.charAt(0).toUpperCase()}</div>
+            <div class="member-status"></div>
+          </div>
+          <div class="member-name">${username}</div>
+        `;
+        
+        onlineCategory.appendChild(memberItem);
+        
+        // Update count
+        const count = onlineUsers.size;
+        membersList.querySelector('.member-category-title').textContent = `Online — ${count}`;
+        document.getElementById('membersCount').textContent = `${count} Online`;
+      }
+
+      // Switch channel
+      function switchChannel(channelName) {
+        currentChannel = channelName;
+        document.getElementById("currentChannelName").textContent = channelName;
+        messageInput.placeholder = `Message #${channelName}`;
+        
+        // Update active state
+        document.querySelectorAll('.channel-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+      }
+
+      // Mobile sidebar toggle
+      function toggleMobileSidebar() {
+        const sidebar = document.getElementById("sidebarLeft");
+        const overlay = document.getElementById("mobileOverlay");
+        sidebar.classList.toggle("mobile-open");
+        overlay.classList.toggle("active");
+      }
+
+      // Connection status
+      ws.onopen = () => {
+        document.getElementById("connectionStatus").textContent = "Connected";
+      };
+
+      ws.onclose = () => {
+        document.getElementById("connectionStatus").textContent = "Disconnected";
+        document.querySelector(".status-dot").style.background = "#ed4245";
+      };
+
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      // Mobile menu button visibility
+      if (window.innerWidth <= 768) {
+        document.getElementById("mobileMenuBtn").style.display = "flex";
+      }
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById("mobileMenuBtn").style.display = "flex";
+        } else {
+          document.getElementById("mobileMenuBtn").style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>
