@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChatFlow - Team Messaging Platform</title>
+    <title>ChatFlow - Modern Team Messaging</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
@@ -11,291 +17,612 @@
         box-sizing: border-box;
       }
 
+      :root {
+        --bg-primary: #0a0e27;
+        --bg-secondary: #131832;
+        --bg-tertiary: #1a1f3a;
+        --bg-elevated: #1f2544;
+        --accent-primary: #00d4ff;
+        --accent-secondary: #7c3aed;
+        --text-primary: #ffffff;
+        --text-secondary: #a8b3cf;
+        --text-tertiary: #6b7794;
+        --success: #10b981;
+        --error: #ef4444;
+      }
+
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        background: #1a1d21;
+        font-family:
+          "DM Sans",
+          -apple-system,
+          sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
         height: 100vh;
         overflow: hidden;
-        color: #e4e6eb;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      .platform-container {
+      /* Utility Classes */
+      .hidden {
+        display: none !important;
+      }
+      .flex {
+        display: flex;
+      }
+      .grid {
         display: grid;
-        grid-template-columns: 280px 1fr 300px;
-        height: 100vh;
       }
-
-      /* Left Sidebar - Channels */
-      .sidebar-left {
-        background: #232529;
-        border-right: 1px solid #36393f;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+      .block {
+        display: block;
       }
-
-      .workspace-header {
-        padding: 20px;
-        background: #1a1d21;
-        border-bottom: 1px solid #36393f;
-      }
-
-      .workspace-name {
-        font-size: 18px;
-        font-weight: 700;
-        color: #fff;
-        display: flex;
+      .items-center {
         align-items: center;
-        gap: 10px;
-        margin-bottom: 8px;
       }
-
-      .workspace-status {
-        font-size: 13px;
-        color: #b9bbbe;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+      .items-baseline {
+        align-items: baseline;
       }
-
-      .status-dot {
-        width: 8px;
-        height: 8px;
-        background: #43b581;
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-      }
-
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-      }
-
-      .channels-section {
-        flex: 1;
-        overflow-y: auto;
-        padding: 16px 0;
-      }
-
-      .channels-section::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      .channels-section::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      .channels-section::-webkit-scrollbar-thumb {
-        background: #36393f;
-        border-radius: 4px;
-      }
-
-      .channel-category {
-        margin-bottom: 20px;
-      }
-
-      .category-title {
-        padding: 6px 20px;
-        font-size: 12px;
-        font-weight: 700;
-        color: #8e9297;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        user-select: none;
-      }
-
-      .category-title:hover {
-        color: #b9bbbe;
-      }
-
-      .channel-item {
-        padding: 8px 20px;
-        margin: 2px 8px;
-        border-radius: 6px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.2s ease;
-        font-size: 15px;
-        color: #b9bbbe;
-      }
-
-      .channel-item:hover {
-        background: #36393f;
-        color: #fff;
-      }
-
-      .channel-item.active {
-        background: #404449;
-        color: #fff;
-        font-weight: 600;
-      }
-
-      .channel-icon {
-        font-size: 18px;
-        opacity: 0.7;
-      }
-
-      .user-profile {
-        padding: 12px 16px;
-        background: #1a1d21;
-        border-top: 1px solid #36393f;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .user-avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
+      .justify-center {
         justify-content: center;
-        font-size: 16px;
-        font-weight: 700;
-        color: white;
       }
-
-      .user-info {
-        flex: 1;
+      .justify-end {
+        justify-content: end;
       }
-
-      .user-name {
-        font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-      }
-
-      .user-status {
-        font-size: 12px;
-        color: #b9bbbe;
-      }
-
-      .user-settings {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 0.2s;
-        font-size: 18px;
-      }
-
-      .user-settings:hover {
-        background: #36393f;
-      }
-
-      /* Main Chat Area */
-      .chat-main {
-        background: #2b2d31;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .chat-header {
-        height: 60px;
-        background: #232529;
-        border-bottom: 1px solid #36393f;
-        padding: 0 24px;
-        display: flex;
-        align-items: center;
+      .justify-between {
         justify-content: space-between;
       }
-
-      .channel-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+      .flex-col {
+        flex-direction: column;
       }
-
-      .channel-name {
-        font-size: 18px;
-        font-weight: 700;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+      .flex-1 {
+        flex: 1;
       }
-
-      .channel-description {
-        font-size: 13px;
-        color: #b9bbbe;
-        margin-left: 8px;
-        padding-left: 8px;
-        border-left: 1px solid #36393f;
+      .flex-shrink-0 {
+        flex-shrink: 0;
       }
-
-      .chat-actions {
-        display: flex;
-        gap: 12px;
+      .gap-1 {
+        gap: 0.25rem;
       }
-
-      .action-button {
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
-        background: transparent;
+      .gap-1\.5 {
+        gap: 0.375rem;
+      }
+      .gap-2 {
+        gap: 0.5rem;
+      }
+      .gap-2\.5 {
+        gap: 0.625rem;
+      }
+      .gap-3 {
+        gap: 0.75rem;
+      }
+      .gap-4 {
+        gap: 1rem;
+      }
+      .gap-6 {
+        gap: 1.5rem;
+      }
+      .relative {
+        position: relative;
+      }
+      .absolute {
+        position: absolute;
+      }
+      .fixed {
+        position: fixed;
+      }
+      .inset-0 {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .inset-y-0 {
+        top: 0;
+        bottom: 0;
+      }
+      .z-90 {
+        z-index: 90;
+      }
+      .z-95 {
+        z-index: 95;
+      }
+      .z-100 {
+        z-index: 100;
+      }
+      .z-1000 {
+        z-index: 1000;
+      }
+      .w-full {
+        width: 100%;
+      }
+      .w-2 {
+        width: 0.5rem;
+      }
+      .w-3 {
+        width: 0.75rem;
+      }
+      .w-3\.5 {
+        width: 0.875rem;
+      }
+      .w-8 {
+        width: 2rem;
+      }
+      .w-9 {
+        width: 2.25rem;
+      }
+      .w-10 {
+        width: 2.5rem;
+      }
+      .w-12 {
+        width: 3rem;
+      }
+      .w-42 {
+        width: 2.625rem;
+      }
+      .h-2 {
+        height: 0.5rem;
+      }
+      .h-3 {
+        height: 0.75rem;
+      }
+      .h-3\.5 {
+        height: 0.875rem;
+      }
+      .h-8 {
+        height: 2rem;
+      }
+      .h-9 {
+        height: 2.25rem;
+      }
+      .h-10 {
+        height: 2.5rem;
+      }
+      .h-12 {
+        height: 3rem;
+      }
+      .h-42 {
+        height: 2.625rem;
+      }
+      .h-screen {
+        height: 100vh;
+      }
+      .min-w-0 {
+        min-width: 0;
+      }
+      .min-w-40 {
+        min-width: 10rem;
+      }
+      .max-w-lg {
+        max-width: 32rem;
+      }
+      .max-w-3xl {
+        max-width: 48rem;
+      }
+      .max-h-112 {
+        max-height: 28rem;
+      }
+      .max-h-90vh {
+        max-height: 90vh;
+      }
+      .overflow-hidden {
+        overflow: hidden;
+      }
+      .overflow-y-auto {
+        overflow-y: auto;
+      }
+      .overflow-x-hidden {
+        overflow-x: hidden;
+      }
+      .rounded-md {
+        border-radius: 0.375rem;
+      }
+      .rounded-lg {
+        border-radius: 0.5rem;
+      }
+      .rounded-xl {
+        border-radius: 0.75rem;
+      }
+      .rounded-2xl {
+        border-radius: 1rem;
+      }
+      .rounded-3xl {
+        border-radius: 1.5rem;
+      }
+      .rounded-full {
+        border-radius: 9999px;
+      }
+      .border {
+        border-width: 1px;
+      }
+      .border-2 {
+        border-width: 2px;
+      }
+      .border-none {
         border: none;
-        color: #b9bbbe;
+      }
+      .border-b {
+        border-bottom-width: 1px;
+      }
+      .border-t {
+        border-top-width: 1px;
+      }
+      .border-l {
+        border-left-width: 1px;
+      }
+      .border-r {
+        border-right-width: 1px;
+      }
+      .border-white-8 {
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+      .border-red-500 {
+        border-color: #ef4444;
+      }
+      .border-accent {
+        border-color: var(--accent-primary);
+      }
+      .bg-primary {
+        background-color: var(--bg-primary);
+      }
+      .bg-secondary {
+        background-color: var(--bg-secondary);
+      }
+      .bg-tertiary {
+        background-color: var(--bg-tertiary);
+      }
+      .bg-elevated {
+        background-color: var(--bg-elevated);
+      }
+      .bg-transparent {
+        background-color: transparent;
+      }
+      .bg-green-500 {
+        background-color: var(--success);
+      }
+      .bg-green-600 {
+        background-color: #0d9668;
+      }
+      .bg-red-500 {
+        background-color: var(--error);
+      }
+      .bg-red-600 {
+        background-color: #dc2626;
+      }
+      .bg-yellow-500-10 {
+        background-color: rgba(245, 158, 11, 0.1);
+      }
+      .bg-red-500-10 {
+        background-color: rgba(239, 68, 68, 0.1);
+      }
+      .bg-primary-90 {
+        background-color: rgba(10, 14, 39, 0.9);
+      }
+      .p-1 {
+        padding: 0.25rem;
+      }
+      .p-3 {
+        padding: 0.75rem;
+      }
+      .p-4 {
+        padding: 1rem;
+      }
+      .p-5 {
+        padding: 1.25rem;
+      }
+      .p-6 {
+        padding: 1.5rem;
+      }
+      .p-10 {
+        padding: 2.5rem;
+      }
+      .px-1\.5 {
+        padding-left: 0.375rem;
+        padding-right: 0.375rem;
+      }
+      .px-2 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      .px-3 {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .px-6 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      .py-1 {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+      }
+      .py-2 {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+      .py-2\.5 {
+        padding-top: 0.625rem;
+        padding-bottom: 0.625rem;
+      }
+      .py-3 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+      .py-3\.5 {
+        padding-top: 0.875rem;
+        padding-bottom: 0.875rem;
+      }
+      .py-4 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      }
+      .py-5 {
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
+      }
+      .py-6 {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
+      .m-0\.5 {
+        margin: 0.125rem;
+      }
+      .mb-0\.5 {
+        margin-bottom: 0.125rem;
+      }
+      .mb-1 {
+        margin-bottom: 0.25rem;
+      }
+      .mb-2 {
+        margin-bottom: 0.5rem;
+      }
+      .mb-3 {
+        margin-bottom: 0.75rem;
+      }
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+      .mb-5 {
+        margin-bottom: 1.25rem;
+      }
+      .mb-6 {
+        margin-bottom: 1.5rem;
+      }
+      .mt-2 {
+        margin-top: 0.5rem;
+      }
+      .mt-4 {
+        margin-top: 1rem;
+      }
+      .ml-2 {
+        margin-left: 0.5rem;
+      }
+      .pl-2 {
+        padding-left: 0.5rem;
+      }
+      .-bottom-0\.5 {
+        bottom: -0.125rem;
+      }
+      .-right-0\.5 {
+        right: -0.125rem;
+      }
+      .bottom-full {
+        bottom: 100%;
+      }
+      .right-0 {
+        right: 0;
+      }
+      .left-0 {
+        left: 0;
+      }
+      .text-xs {
+        font-size: 0.75rem;
+        line-height: 1rem;
+      }
+      .text-sm {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      .text-base {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+      .text-lg {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+      }
+      .text-xl {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+      }
+      .text-2xl {
+        font-size: 1.5rem;
+        line-height: 2rem;
+      }
+      .text-6xl {
+        font-size: 3.75rem;
+        line-height: 1;
+      }
+      .text-11 {
+        font-size: 0.688rem;
+      }
+      .font-medium {
+        font-weight: 500;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .uppercase {
+        text-transform: uppercase;
+      }
+      .tracking-wide {
+        letter-spacing: 0.025em;
+      }
+      .tracking-wider {
+        letter-spacing: 0.05em;
+      }
+      .leading-relaxed {
+        line-height: 1.625;
+      }
+      .text-primary {
+        color: var(--text-primary);
+      }
+      .text-secondary {
+        color: var(--text-secondary);
+      }
+      .text-tertiary {
+        color: var(--text-tertiary);
+      }
+      .text-white {
+        color: white;
+      }
+      .text-red-500 {
+        color: var(--error);
+      }
+      .text-yellow-500 {
+        color: #f59e0b;
+      }
+      .whitespace-nowrap {
+        white-space: nowrap;
+      }
+      .break-words {
+        word-wrap: break-word;
+        word-break: break-word;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .outline-none {
+        outline: none;
+      }
+      .cursor-pointer {
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
+      }
+      .opacity-30 {
+        opacity: 0.3;
+      }
+      .opacity-50 {
+        opacity: 0.5;
+      }
+      .opacity-70 {
+        opacity: 0.7;
+      }
+      .opacity-80 {
+        opacity: 0.8;
+      }
+      .shadow-2xl {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+      .shadow-lg {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      .transition-all {
         transition: all 0.2s;
       }
-
-      .action-button:hover {
-        background: #36393f;
-        color: #fff;
+      .transition-colors {
+        transition: color 0.2s;
+      }
+      .transition-transform {
+        transition: transform 0.3s;
+      }
+      .duration-300 {
+        transition-duration: 300ms;
+      }
+      .col-span-full {
+        grid-column: 1 / -1;
+      }
+      .aspect-video {
+        aspect-ratio: 16 / 9;
       }
 
-      .messages-container {
-        flex: 1;
-        overflow-y: auto;
-        padding: 24px;
+      /* App Container Grid */
+      .app-container {
+        display: grid;
+        grid-template-columns: 280px 1fr 320px;
+        grid-template-rows: 64px 1fr;
+        height: 100vh;
       }
 
-      .messages-container::-webkit-scrollbar {
-        width: 10px;
+      /* Gradients */
+      .accent-gradient {
+        background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
       }
 
-      .messages-container::-webkit-scrollbar-track {
-        background: transparent;
+      .accent-gradient-text {
+        background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
-      .messages-container::-webkit-scrollbar-thumb {
-        background: #36393f;
-        border-radius: 5px;
+      .bg-gradient-br {
+        background: linear-gradient(
+          to bottom right,
+          var(--bg-tertiary),
+          var(--bg-elevated)
+        );
       }
 
-      .messages-container::-webkit-scrollbar-thumb:hover {
-        background: #404449;
+      /* Backdrop Blur */
+      .backdrop-blur-lg {
+        backdrop-filter: blur(16px);
       }
 
-      .message {
-        display: flex;
-        gap: 16px;
-        padding: 8px 16px;
-        margin-bottom: 4px;
-        border-radius: 6px;
-        transition: background 0.1s;
-        animation: slideIn 0.3s ease;
+      /* Channel Item */
+      .channel-item {
+        position: relative;
       }
 
-      @keyframes slideIn {
+      .channel-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+        transform: translateX(-3px);
+        transition: transform 0.2s;
+      }
+
+      .channel-item.active::before {
+        transform: translateX(0);
+      }
+
+      /* Animations */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 8px currentColor;
+        }
+        50% {
+          opacity: 0.5;
+          box-shadow: 0 0 4px currentColor;
+        }
+      }
+
+      @keyframes slideUp {
         from {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(20px);
         }
         to {
           opacity: 1;
@@ -303,794 +630,1696 @@
         }
       }
 
-      .message:hover {
-        background: #2e3035;
-      }
-
-      .message-avatar {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        font-weight: 700;
-        color: white;
-        flex-shrink: 0;
-      }
-
-      .message-content {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .message-header {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-        margin-bottom: 4px;
-      }
-
-      .message-author {
-        font-weight: 600;
-        color: #fff;
-        font-size: 15px;
-      }
-
-      .message-time {
-        font-size: 12px;
-        color: #8e9297;
-      }
-
-      .message-text {
-        color: #e4e6eb;
-        font-size: 15px;
-        line-height: 1.5;
-        word-wrap: break-word;
-      }
-
-      .message-input-container {
-        padding: 24px;
-        background: #232529;
-      }
-
-      .message-input-wrapper {
-        background: #36393f;
-        border-radius: 12px;
-        padding: 12px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border: 1px solid transparent;
-        transition: all 0.2s;
-      }
-
-      .message-input-wrapper:focus-within {
-        background: #404449;
-        border-color: #5865f2;
-      }
-
-      .input-actions-left {
-        display: flex;
-        gap: 8px;
-      }
-
-      .input-action-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        background: transparent;
-        border: none;
-        color: #b9bbbe;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        transition: all 0.2s;
-      }
-
-      .input-action-btn:hover {
-        background: #4e5058;
-        color: #fff;
-      }
-
-      .message-input {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: #e4e6eb;
-        font-size: 15px;
-        outline: none;
-        font-family: inherit;
-      }
-
-      .message-input::placeholder {
-        color: #6d6f78;
-      }
-
-      .send-btn {
-        background: linear-gradient(135deg, #5865f2 0%, #7289da 100%);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.2s;
-      }
-
-      .send-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
-      }
-
-      .send-btn:active {
-        transform: translateY(0);
-      }
-
-      /* Right Sidebar - Members */
-      .sidebar-right {
-        background: #232529;
-        border-left: 1px solid #36393f;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .members-header {
-        padding: 20px;
-        background: #1a1d21;
-        border-bottom: 1px solid #36393f;
-      }
-
-      .members-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .members-count {
-        font-size: 12px;
-        color: #b9bbbe;
-        margin-top: 4px;
-      }
-
-      .members-list {
-        flex: 1;
-        overflow-y: auto;
-        padding: 16px 0;
-      }
-
-      .members-list::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      .members-list::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      .members-list::-webkit-scrollbar-thumb {
-        background: #36393f;
-        border-radius: 4px;
-      }
-
-      .member-category {
-        margin-bottom: 16px;
-      }
-
-      .member-category-title {
-        padding: 6px 20px;
-        font-size: 12px;
-        font-weight: 700;
-        color: #8e9297;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .member-item {
-        padding: 8px 20px;
-        margin: 2px 8px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-
-      .member-item:hover {
-        background: #36393f;
-      }
-
-      .member-avatar-wrapper {
-        position: relative;
-      }
-
-      .member-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 600;
-        color: white;
-      }
-
-      .member-status {
-        position: absolute;
-        bottom: -2px;
-        right: -2px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: #43b581;
-        border: 2px solid #232529;
-      }
-
-      .member-status.away {
-        background: #faa61a;
-      }
-
-      .member-status.offline {
-        background: #747f8d;
-      }
-
-      .member-name {
-        font-size: 14px;
-        color: #e4e6eb;
-        font-weight: 500;
-      }
-
-      .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        color: #8e9297;
-        padding: 40px;
-        text-align: center;
-      }
-
-      .empty-state-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
-        opacity: 0.3;
-      }
-
-      .empty-state-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #b9bbbe;
-      }
-
-      .empty-state-text {
-        font-size: 14px;
-        color: #8e9297;
-      }
-
-      /* Welcome Screen */
-      .welcome-screen {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .welcome-screen.active {
-        display: flex;
-      }
-
-      .welcome-box {
-        background: #232529;
-        border-radius: 16px;
-        padding: 40px;
-        max-width: 480px;
-        width: 90%;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        animation: scaleIn 0.3s ease;
-      }
-
-      @keyframes scaleIn {
+      @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: scale(0.9);
         }
         to {
           opacity: 1;
-          transform: scale(1);
         }
       }
 
-      .welcome-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 12px;
-        text-align: center;
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
-      .welcome-subtitle {
-        font-size: 15px;
-        color: #b9bbbe;
-        margin-bottom: 32px;
-        text-align: center;
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+      .animate-pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+      .animate-slide-up {
+        animation: slideUp 0.3s ease;
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease;
+      }
+      .animate-slide-in {
+        animation: slideIn 0.3s ease;
       }
 
-      .welcome-input-group {
-        margin-bottom: 24px;
+      /* Scrollbars */
+      .scrollbar-custom::-webkit-scrollbar {
+        width: 6px;
       }
 
-      .welcome-label {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #b9bbbe;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+      .scrollbar-custom::-webkit-scrollbar-track {
+        background: transparent;
       }
 
-      .welcome-input {
-        width: 100%;
-        padding: 14px 16px;
-        background: #1a1d21;
-        border: 2px solid #36393f;
-        border-radius: 8px;
-        color: #e4e6eb;
-        font-size: 15px;
-        transition: all 0.2s;
+      .scrollbar-custom::-webkit-scrollbar-thumb {
+        background: var(--bg-elevated);
+        border-radius: 3px;
       }
 
-      .welcome-input:focus {
-        outline: none;
-        border-color: #5865f2;
-        background: #2b2d31;
+      .scrollbar-messages::-webkit-scrollbar {
+        width: 8px;
       }
 
-      .welcome-button {
-        width: 100%;
-        padding: 14px;
-        background: linear-gradient(135deg, #5865f2 0%, #7289da 100%);
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
+      .scrollbar-messages::-webkit-scrollbar-track {
+        background: transparent;
       }
 
-      .welcome-button:hover {
+      .scrollbar-messages::-webkit-scrollbar-thumb {
+        background: var(--bg-elevated);
+        border-radius: 4px;
+      }
+
+      /* Hover States */
+      .hover-bg-elevated:hover {
+        background-color: var(--bg-elevated);
+      }
+      .hover-bg-tertiary:hover {
+        background-color: var(--bg-tertiary);
+      }
+      .hover-bg-secondary:hover {
+        background-color: var(--bg-secondary);
+      }
+      .hover-bg-green-600:hover {
+        background-color: #0d9668;
+      }
+      .hover-bg-red-600:hover {
+        background-color: #dc2626;
+      }
+      .hover-text-primary:hover {
+        color: var(--text-primary);
+      }
+      .hover-text-secondary:hover {
+        color: var(--text-secondary);
+      }
+      .hover-border-white-8:hover {
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+      .hover-translate-y-n2:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+      }
+      .hover-rotate-90:hover {
+        transform: rotate(90deg);
+      }
+      .hover-shadow-glow:hover {
+        box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
       }
 
-      /* Mobile Responsive */
-      @media (max-width: 1024px) {
-        .platform-container {
-          grid-template-columns: 240px 1fr;
-        }
+      /* Active States */
+      .active-translate-y-0:active {
+        transform: translateY(0);
+      }
 
-        .sidebar-right {
+      /* Focus States */
+      .focus-border-accent:focus {
+        border-color: var(--accent-primary);
+      }
+      .focus-bg-elevated:focus {
+        background-color: var(--bg-elevated);
+      }
+      .focus-shadow-glow:focus {
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+      }
+
+      .focus-within-border-accent:focus-within {
+        border-color: var(--accent-primary);
+      }
+      .focus-within-bg-elevated:focus-within {
+        background-color: var(--bg-elevated);
+      }
+      .focus-within-shadow-glow:focus-within {
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+      }
+
+      /* Disabled States */
+      .disabled-opacity-50:disabled {
+        opacity: 0.5;
+      }
+      .disabled-cursor-not-allowed:disabled {
+        cursor: not-allowed;
+      }
+
+      /* Placeholder */
+      .placeholder-tertiary::placeholder {
+        color: var(--text-tertiary);
+      }
+
+      /* Font Mono */
+      .font-mono {
+        font-family: "Space Mono", monospace;
+      }
+
+      /* Mobile Sidebar */
+      .mobile-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 95;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-sidebar.open {
+        transform: translateX(0);
+      }
+
+      /* Members Panel */
+      .members-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 95;
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .members-panel.open {
+        transform: translateX(0);
+      }
+
+      /* Responsive Breakpoints */
+
+      /* Tablet and below (hide right sidebar) */
+      @media (max-width: 1200px) {
+        .app-container {
+          grid-template-columns: 280px 1fr;
+        }
+        .sidebar-right-desktop {
           display: none;
         }
       }
 
-      @media (max-width: 768px) {
-        .platform-container {
+      /* Mobile landscape and below */
+      @media (max-width: 960px) {
+        .app-container {
           grid-template-columns: 1fr;
         }
-
-        .sidebar-left {
-          position: fixed;
-          left: -280px;
-          top: 0;
-          bottom: 0;
-          width: 280px;
-          z-index: 100;
-          transition: left 0.3s;
-        }
-
-        .sidebar-left.mobile-open {
-          left: 0;
-        }
-
-        .mobile-overlay {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
-          z-index: 99;
-        }
-
-        .mobile-overlay.active {
-          display: block;
-        }
-
-        .channel-description {
+        .sidebar-left-desktop {
           display: none;
         }
+      }
 
-        .send-btn span {
-          display: none;
+      /* Mobile portrait */
+      @media (max-width: 640px) {
+        .app-container {
+          grid-template-rows: 56px 1fr;
+        }
+
+        .mobile-sidebar,
+        .members-panel {
+          width: 85vw;
+          max-width: 320px;
+        }
+
+        .text-6xl {
+          font-size: 2.5rem;
+        }
+        .text-2xl {
+          font-size: 1.25rem;
+        }
+        .text-xl {
+          font-size: 1.125rem;
+        }
+        .text-lg {
+          font-size: 1rem;
+        }
+      }
+
+      /* Extra small screens */
+      @media (max-width: 380px) {
+        .mobile-sidebar,
+        .members-panel {
+          width: 100vw;
+        }
+      }
+
+      /* Touch device optimizations */
+      @media (hover: none) and (pointer: coarse) {
+        .hover-translate-y-n2:hover {
+          transform: none;
+        }
+
+        .hover-rotate-90:hover {
+          transform: none;
+        }
+
+        .hover-shadow-glow:hover {
+          box-shadow: none;
+        }
+
+        /* Make touch targets larger */
+        button,
+        .channel-item,
+        .cursor-pointer {
+          min-height: 44px;
+          min-width: 44px;
+        }
+      }
+
+      /* Landscape mobile adjustments */
+      @media (max-height: 500px) and (orientation: landscape) {
+        .app-container {
+          grid-template-rows: 48px 1fr;
+        }
+
+        .p-10 {
+          padding: 1.5rem;
+        }
+
+        .py-6 {
+          padding-top: 0.75rem;
+          padding-bottom: 0.75rem;
         }
       }
     </style>
   </head>
   <body>
-    <!-- Welcome Screen -->
-    <div class="welcome-screen active" id="welcomeScreen">
-      <div class="welcome-box">
-        <h1 class="welcome-title">👋 Welcome to ChatFlow</h1>
-        <p class="welcome-subtitle">Enter your name to start chatting with your team</p>
-        <div class="welcome-input-group">
-          <label class="welcome-label">Username</label>
-          <input
-            type="text"
-            class="welcome-input"
-            id="welcomeNameInput"
-            placeholder="Enter your username"
-            maxlength="30"
-          />
+    <!-- Welcome Modal -->
+    <div
+      class="fixed inset-0 bg-primary-90 backdrop-blur-lg flex items-center justify-center z-1000 p-5 animate-fade-in"
+      id="welcomeModal"
+    >
+      <div
+        class="bg-secondary rounded-3xl w-full max-w-lg shadow-2xl border border-white-8 overflow-hidden animate-slide-in"
+      >
+        <div class="p-6 border-b border-white-8">
+          <h2
+            class="text-2xl font-bold text-primary mb-2 flex items-center gap-3"
+          >
+            <span>👋</span>
+            Welcome to ChatFlow
+          </h2>
+          <p class="text-sm text-tertiary">
+            Enter your username to join the conversation
+          </p>
         </div>
-        <button class="welcome-button" onclick="joinChat()">Join Chat</button>
+        <div class="p-6">
+          <div class="mb-6">
+            <label
+              class="block text-xs font-bold uppercase tracking-wider text-tertiary mb-2"
+              >Username</label
+            >
+            <input
+              type="text"
+              class="w-full px-4 py-3.5 bg-tertiary border-2 border-white-8 rounded-xl text-primary text-base transition-all outline-none focus-border-accent focus-bg-elevated focus-shadow-glow"
+              id="welcomeUsernameInput"
+              placeholder="Choose your username"
+              maxlength="30"
+              autocomplete="off"
+            />
+            <div class="text-xs text-tertiary mt-2 flex items-center gap-1.5">
+              <span>💡</span>
+              <span>Choose a name that represents you</span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="p-5 bg-tertiary flex gap-3 justify-end border-t border-white-8"
+        >
+          <button
+            class="w-full px-6 py-3 border-none rounded-xl text-sm font-semibold cursor-pointer transition-all accent-gradient text-white hover-translate-y-n2 hover-shadow-glow active-translate-y-0"
+            id="joinChatBtn"
+          >
+            Join Chat
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Mobile Overlay -->
-    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileSidebar()"></div>
+    <div
+      class="hidden fixed inset-0 bg-primary-90 z-90"
+      id="mobileOverlay"
+    ></div>
 
-    <div class="platform-container">
-      <!-- Left Sidebar -->
-      <aside class="sidebar-left" id="sidebarLeft">
-        <div class="workspace-header">
-          <div class="workspace-name">
-            <span>💼</span>
-            <span>ChatFlow Workspace</span>
+    <!-- App Container -->
+    <div class="app-container">
+      <!-- Top Bar -->
+      <div
+        class="col-span-full bg-secondary border-b border-white-8 flex items-center gap-3 relative z-100 top-bar"
+        style="padding: 0.75rem 1rem"
+      >
+        <button
+          class="w-10 h-10 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary flex-shrink-0 menu-btn"
+          id="menuToggleBtn"
+          aria-label="Menu"
+          style="display: none"
+        >
+          ☰
+        </button>
+
+        <div
+          class="flex items-center gap-2 font-bold accent-gradient-text flex-shrink-0"
+        >
+          <div
+            class="w-8 h-8 accent-gradient rounded-lg flex items-center justify-center text-lg font-bold text-white animate-float"
+          >
+            💬
           </div>
-          <div class="workspace-status">
-            <span class="status-dot"></span>
-            <span id="connectionStatus">Connected</span>
+          <span class="app-title" style="font-size: 1.125rem">ChatFlow</span>
+        </div>
+
+        <div
+          class="flex items-center gap-2 px-3 py-1.5 bg-tertiary rounded-xl cursor-pointer transition-all border border-transparent hover-bg-elevated hover-border-white-8 flex-shrink-0"
+          id="workspaceSelector"
+        >
+          <div class="font-semibold workspace-text" style="font-size: 0.875rem">
+            Workspace
+          </div>
+          <div
+            class="w-2 h-2 rounded-full bg-green-500 animate-pulse-glow"
+            id="connectionStatus"
+            title="Disconnected"
+          ></div>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <div class="flex gap-2 flex-shrink-0">
+          <button
+            class="w-10 h-10 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary search-btn"
+            title="Search"
+            aria-label="Search"
+          >
+            🔍
+          </button>
+          <button
+            class="w-10 h-10 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary notif-btn"
+            title="Notifications"
+            aria-label="Notifications"
+          >
+            🔔
+          </button>
+          <button
+            class="w-10 h-10 items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary members-toggle-btn"
+            id="membersToggleBtn"
+            title="Members"
+            aria-label="Members"
+            style="display: none"
+          >
+            👥
+          </button>
+          <button
+            class="w-10 h-10 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary help-btn"
+            title="Help"
+            aria-label="Help"
+          >
+            ❓
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar Left (Desktop) -->
+      <aside
+        class="bg-secondary border-r border-white-8 flex flex-col overflow-hidden sidebar-left-desktop"
+        id="sidebarLeftDesktop"
+      >
+        <div class="p-5 border-b border-white-8">
+          <div
+            class="text-xs font-bold uppercase tracking-wide text-tertiary mb-3"
+          >
+            Channels
           </div>
         </div>
 
-        <div class="channels-section">
-          <div class="channel-category">
-            <div class="category-title">
+        <div class="flex-1 overflow-y-auto p-3 scrollbar-custom">
+          <div class="mb-5">
+            <div
+              class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2 flex items-center gap-1.5 cursor-pointer transition-colors hover-text-secondary"
+            >
               <span>▼</span>
               <span>Text Channels</span>
             </div>
-            <div class="channel-item active" onclick="switchChannel('general')">
-              <span class="channel-icon">#</span>
-              <span>general</span>
+            <div
+              class="channel-item active flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden bg-elevated text-primary font-semibold hover-bg-tertiary hover-text-primary"
+              data-channel="general"
+              data-description="Team discussions and updates"
+            >
+              <span class="text-lg opacity-80">#</span>
+              <span class="flex-1">general</span>
             </div>
-            <div class="channel-item" onclick="switchChannel('random')">
-              <span class="channel-icon">#</span>
-              <span>random</span>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="random"
+              data-description="Off-topic conversations"
+            >
+              <span class="text-lg opacity-80">#</span>
+              <span class="flex-1">random</span>
             </div>
-            <div class="channel-item" onclick="switchChannel('announcements')">
-              <span class="channel-icon">📢</span>
-              <span>announcements</span>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="announcements"
+              data-description="Important updates"
+            >
+              <span class="text-lg opacity-80">📢</span>
+              <span class="flex-1">announcements</span>
+            </div>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="projects"
+              data-description="Project discussions"
+            >
+              <span class="text-lg opacity-80">📁</span>
+              <span class="flex-1">projects</span>
             </div>
           </div>
 
-          <div class="channel-category">
-            <div class="category-title">
+          <div class="mb-5">
+            <div
+              class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2 flex items-center gap-1.5 cursor-pointer transition-colors hover-text-secondary"
+            >
               <span>▼</span>
               <span>Voice Channels</span>
             </div>
-            <div class="channel-item">
-              <span class="channel-icon">🔊</span>
-              <span>General Voice</span>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="general-voice"
+              data-description="General voice chat"
+            >
+              <span class="text-lg opacity-80">🔊</span>
+              <span class="flex-1">General Voice</span>
             </div>
-            <div class="channel-item">
-              <span class="channel-icon">🔊</span>
-              <span>Meeting Room</span>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="meeting-room"
+              data-description="Team meetings"
+            >
+              <span class="text-lg opacity-80">🔊</span>
+              <span class="flex-1">Meeting Room</span>
             </div>
           </div>
         </div>
 
-        <div class="user-profile">
-          <div class="user-avatar" id="userAvatarLeft">?</div>
-          <div class="user-info">
-            <div class="user-name" id="currentUserName">Guest</div>
-            <div class="user-status">🟢 Online</div>
+        <div
+          class="p-4 border-t border-white-8 bg-tertiary flex items-center gap-3"
+        >
+          <div
+            class="w-42 h-42 rounded-xl accent-gradient flex items-center justify-center text-lg font-bold text-white relative flex-shrink-0"
+            id="userAvatar"
+          >
+            ?
+            <div
+              class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-tertiary rounded-full"
+            ></div>
           </div>
-          <div class="user-settings">⚙️</div>
+          <div class="flex-1 min-w-0">
+            <div class="relative mb-0.5">
+              <div
+                class="font-semibold text-sm text-primary whitespace-nowrap overflow-hidden cursor-pointer px-1.5 py-1 rounded-md transition-all hover-bg-secondary"
+                style="
+                  text-overflow: ellipsis;
+                  display: inline-block;
+                  max-width: 100%;
+                "
+                id="userName"
+                title="Click to edit"
+              >
+                Guest
+              </div>
+              <input
+                type="text"
+                class="hidden w-full px-1.5 py-1 bg-secondary border-2 border-accent rounded-md text-primary text-sm font-semibold outline-none"
+                id="userNameInput"
+                maxlength="30"
+              />
+            </div>
+            <div class="text-xs text-tertiary">🟢 Online</div>
+          </div>
+          <div class="relative">
+            <button
+              class="w-9 h-9 flex items-center justify-center bg-secondary border-none rounded-lg text-secondary cursor-pointer transition-all text-lg flex-shrink-0 hover-bg-elevated hover-text-primary hover-rotate-90"
+              id="settingsBtn"
+              title="Settings"
+              aria-label="Settings"
+            >
+              ⚙️
+            </button>
+            <div
+              class="hidden absolute bottom-full right-0 mb-2 bg-elevated border border-white-8 rounded-lg p-1 min-w-40 shadow-lg z-1000"
+              id="settingsMenu"
+            >
+              <div
+                class="px-3 py-2 rounded-md cursor-pointer transition-all flex items-center gap-2 text-sm text-secondary hover-bg-tertiary hover-text-primary"
+                id="editUsernameBtn"
+              >
+                <span>✏️</span>
+                <span>Edit Username</span>
+              </div>
+              <div
+                class="px-3 py-2 rounded-md cursor-pointer transition-all flex items-center gap-2 text-sm text-red-500 hover-bg-red-500-10"
+                id="logoutBtn"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Sidebar Left (Mobile) -->
+      <aside
+        class="bg-secondary border-r border-white-8 flex flex-col overflow-hidden mobile-sidebar"
+        id="sidebarLeftMobile"
+      >
+        <div
+          class="p-5 border-b border-white-8 flex items-center justify-between"
+        >
+          <div class="text-xs font-bold uppercase tracking-wide text-tertiary">
+            Channels
+          </div>
+          <button
+            class="w-8 h-8 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary"
+            id="closeSidebarBtn"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-3 scrollbar-custom">
+          <div class="mb-5">
+            <div
+              class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2 flex items-center gap-1.5 cursor-pointer transition-colors hover-text-secondary"
+            >
+              <span>▼</span>
+              <span>Text Channels</span>
+            </div>
+            <div
+              class="channel-item active flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden bg-elevated text-primary font-semibold hover-bg-tertiary hover-text-primary"
+              data-channel="general"
+              data-description="Team discussions and updates"
+            >
+              <span class="text-lg opacity-80">#</span>
+              <span class="flex-1">general</span>
+            </div>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="random"
+              data-description="Off-topic conversations"
+            >
+              <span class="text-lg opacity-80">#</span>
+              <span class="flex-1">random</span>
+            </div>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="announcements"
+              data-description="Important updates"
+            >
+              <span class="text-lg opacity-80">📢</span>
+              <span class="flex-1">announcements</span>
+            </div>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="projects"
+              data-description="Project discussions"
+            >
+              <span class="text-lg opacity-80">📁</span>
+              <span class="flex-1">projects</span>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <div
+              class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2 flex items-center gap-1.5 cursor-pointer transition-colors hover-text-secondary"
+            >
+              <span>▼</span>
+              <span>Voice Channels</span>
+            </div>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="general-voice"
+              data-description="General voice chat"
+            >
+              <span class="text-lg opacity-80">🔊</span>
+              <span class="flex-1">General Voice</span>
+            </div>
+            <div
+              class="channel-item flex items-center gap-2.5 px-3 py-2.5 m-0.5 rounded-lg cursor-pointer transition-all text-secondary text-base font-medium relative overflow-hidden hover-bg-tertiary hover-text-primary"
+              data-channel="meeting-room"
+              data-description="Team meetings"
+            >
+              <span class="text-lg opacity-80">🔊</span>
+              <span class="flex-1">Meeting Room</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="p-4 border-t border-white-8 bg-tertiary flex items-center gap-3"
+        >
+          <div
+            class="w-42 h-42 rounded-xl accent-gradient flex items-center justify-center text-lg font-bold text-white relative flex-shrink-0"
+            id="userAvatarMobile"
+          >
+            ?
+            <div
+              class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-tertiary rounded-full"
+            ></div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div
+              class="font-semibold text-sm text-primary whitespace-nowrap overflow-hidden"
+              style="text-overflow: ellipsis"
+              id="userNameMobile"
+            >
+              Guest
+            </div>
+            <div class="text-xs text-tertiary">🟢 Online</div>
+          </div>
         </div>
       </aside>
 
       <!-- Main Chat Area -->
-      <main class="chat-main">
-        <header class="chat-header">
-          <div class="channel-info">
-            <button class="action-button" style="display: none;" id="mobileMenuBtn" onclick="toggleMobileSidebar()">
-              ☰
+      <main class="bg-primary flex flex-col relative overflow-hidden">
+        <div
+          class="border-b border-white-8 flex items-center gap-3 bg-secondary flex-shrink-0 channel-header"
+          style="padding: 1rem 1.5rem"
+        >
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            <span
+              class="text-2xl text-tertiary channel-icon"
+              style="line-height: 1"
+              >#</span
+            >
+            <h2
+              class="text-lg font-bold text-primary"
+              id="currentChannelName"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              general
+            </h2>
+            <span
+              class="text-sm text-tertiary ml-2 pl-2 border-l border-white-8 channel-desc"
+              id="channelDescription"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+              >Team discussions and updates</span
+            >
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button
+              class="w-10 h-10 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary pin-btn flex-shrink-0"
+              title="Pin Messages"
+              aria-label="Pin"
+            >
+              📌
             </button>
-            <div class="channel-name">
-              <span>#</span>
-              <span id="currentChannelName">general</span>
-            </div>
-            <div class="channel-description">Team discussions and updates</div>
-          </div>
-          <div class="chat-actions">
-            <button class="action-button" title="Search">🔍</button>
-            <button class="action-button" title="Notifications">🔔</button>
-            <button class="action-button" title="Members">👥</button>
-          </div>
-        </header>
-
-        <div class="messages-container" id="messagesContainer">
-          <div class="empty-state">
-            <div class="empty-state-icon">💬</div>
-            <div class="empty-state-title">Welcome to #general</div>
-            <div class="empty-state-text">This is the start of the conversation. Say hello!</div>
+            <button
+              class="w-10 h-10 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary members-btn flex-shrink-0"
+              title="Members"
+              aria-label="Members"
+              id="membersBtn"
+            >
+              👥
+            </button>
           </div>
         </div>
 
-        <div class="message-input-container">
-          <div class="message-input-wrapper">
-            <div class="input-actions-left">
-              <button class="input-action-btn" title="Upload file">📎</button>
-              <button class="input-action-btn" title="Emoji">😊</button>
-              <button class="input-action-btn" title="GIF">GIF</button>
+        <div
+          class="flex-1 overflow-y-auto overflow-x-hidden px-6 py-6 flex flex-col gap-2 scrollbar-messages message-area"
+          id="messagesContainer"
+        >
+          <div
+            class="flex-1 flex flex-col items-center justify-center gap-4 p-10"
+          >
+            <div class="text-6xl opacity-30 animate-float">💬</div>
+            <div class="text-2xl font-bold text-primary">
+              Welcome to #general
+            </div>
+            <div class="text-base text-tertiary text-center leading-relaxed">
+              This is the beginning of your conversation.<br />Say hello to get
+              started!
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="px-6 py-5 border-t border-white-8 bg-secondary flex-shrink-0 message-input-area"
+        >
+          <div
+            class="flex items-center gap-3 bg-tertiary border-2 border-white-8 rounded-2xl px-4 py-3 transition-all focus-within-border-accent focus-within-bg-elevated focus-within-shadow-glow"
+          >
+            <div class="flex gap-1 attachment-buttons">
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-transparent border-none rounded-lg text-tertiary cursor-pointer transition-all text-lg hover-bg-secondary hover-text-primary"
+                title="Attach File"
+                aria-label="Attach"
+              >
+                📎
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-transparent border-none rounded-lg text-tertiary cursor-pointer transition-all text-lg hover-bg-secondary hover-text-primary"
+                title="Emoji"
+                aria-label="Emoji"
+              >
+                😊
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center bg-transparent border-none rounded-lg text-tertiary cursor-pointer transition-all text-lg hover-bg-secondary hover-text-primary"
+                title="GIF"
+                aria-label="GIF"
+              >
+                🎬
+              </button>
             </div>
             <input
               type="text"
-              class="message-input"
+              class="flex-1 bg-transparent border-none text-primary text-base outline-none placeholder-tertiary"
               id="messageInput"
-              placeholder="Message #general"
+              placeholder="Type a message..."
               maxlength="500"
+              autocomplete="off"
             />
-            <button class="send-btn" onclick="sendMessage()" id="sendBtn">
-              <span>Send</span>
+            <div
+              class="hidden text-11 text-yellow-500 px-2 py-1 bg-yellow-500-10 rounded-md whitespace-nowrap items-center gap-1"
+              id="offlineIndicator"
+            >
+              <span>⚠️</span>
+              <span>Offline</span>
+            </div>
+            <button
+              class="w-10 h-10 flex items-center justify-center accent-gradient border-none rounded-xl text-white cursor-pointer transition-all text-lg hover-translate-y-n2 hover-shadow-glow active-translate-y-0 disabled-opacity-50 disabled-cursor-not-allowed"
+              id="sendBtn"
+              aria-label="Send"
+            >
               <span>➤</span>
             </button>
           </div>
         </div>
       </main>
 
-      <!-- Right Sidebar - Members -->
-      <aside class="sidebar-right">
-        <div class="members-header">
-          <div class="members-title">Members</div>
-          <div class="members-count" id="membersCount">1 Online</div>
+      <!-- Sidebar Right (Desktop) -->
+      <aside
+        class="bg-secondary border-l border-white-8 flex flex-col sidebar-right-desktop"
+      >
+        <div class="p-5 border-b border-white-8">
+          <div
+            class="text-xs font-bold uppercase tracking-wide text-tertiary mb-1"
+          >
+            Members
+          </div>
+          <div class="text-sm text-secondary font-semibold" id="membersCount">
+            1 Online
+          </div>
         </div>
 
-        <div class="members-list" id="membersList">
-          <div class="member-category">
-            <div class="member-category-title">Online — 1</div>
+        <div
+          class="flex-1 overflow-y-auto p-3 scrollbar-custom"
+          id="membersList"
+        >
+          <div class="mb-4">
+            <div
+              class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2"
+            >
+              Online — 1
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Members Panel (Mobile) -->
+      <aside
+        class="bg-secondary border-l border-white-8 flex flex-col members-panel"
+        id="membersPanel"
+      >
+        <div
+          class="p-5 border-b border-white-8 flex items-center justify-between"
+        >
+          <div>
+            <div
+              class="text-xs font-bold uppercase tracking-wide text-tertiary mb-1"
+            >
+              Members
+            </div>
+            <div
+              class="text-sm text-secondary font-semibold"
+              id="membersCountMobile"
+            >
+              1 Online
+            </div>
+          </div>
+          <button
+            class="w-8 h-8 flex items-center justify-center bg-transparent border-none rounded-lg text-secondary cursor-pointer transition-all text-xl hover-bg-elevated hover-text-primary"
+            id="closeMembersBtn"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div
+          class="flex-1 overflow-y-auto p-3 scrollbar-custom"
+          id="membersListMobile"
+        >
+          <div class="mb-4">
+            <div
+              class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2"
+            >
+              Online — 1
+            </div>
           </div>
         </div>
       </aside>
     </div>
 
     <script>
-      const ws = new WebSocket("ws://192.168.13.145:3000/");
-      const messagesContainer = document.getElementById("messagesContainer");
-      const messageInput = document.getElementById("messageInput");
-      const welcomeScreen = document.getElementById("welcomeScreen");
-      const welcomeNameInput = document.getElementById("welcomeNameInput");
-      
-      let currentUser = "";
-      let messageCount = 0;
-      let currentChannel = "general";
-      const onlineUsers = new Set();
+      // ============================================
+      // Constants & Configuration
+      // ============================================
+      const CONFIG = {
+        WS_URL: "ws://192.168.1.5:3000/",
+        RECONNECT_DELAY: 5000,
+        STORAGE_KEY: "chatflow_username",
+      };
 
-      // Load saved username
-      const savedUsername = localStorage.getItem("chatflow_username");
-      if (savedUsername) {
-        welcomeNameInput.value = savedUsername;
-      }
+      // ============================================
+      // State Management
+      // ============================================
+      const state = {
+        ws: null,
+        isConnected: false,
+        reconnectAttempts: 0,
+        reconnectTimeout: null,
+        shouldStayConnected: false,
+        wsInitialized: false,
+        currentUser: "",
+        currentChannel: "general",
+        messageCount: 0,
+        onlineUsers: new Set(),
+      };
 
-      // Join chat function
-      function joinChat() {
-        const username = welcomeNameInput.value.trim();
-        if (!username) {
-          welcomeNameInput.focus();
-          welcomeNameInput.style.borderColor = "#ed4245";
-          setTimeout(() => {
-            welcomeNameInput.style.borderColor = "#36393f";
-          }, 2000);
-          return;
-        }
+      // ============================================
+      // DOM Elements Cache
+      // ============================================
+      const elements = {
+        welcomeModal: document.getElementById("welcomeModal"),
+        messagesContainer: document.getElementById("messagesContainer"),
+        messageInput: document.getElementById("messageInput"),
+        sendBtn: document.getElementById("sendBtn"),
+        welcomeUsernameInput: document.getElementById("welcomeUsernameInput"),
+        sidebarLeftMobile: document.getElementById("sidebarLeftMobile"),
+        membersPanel: document.getElementById("membersPanel"),
+        mobileOverlay: document.getElementById("mobileOverlay"),
+        userNameDisplay: document.getElementById("userName"),
+        userNameInput: document.getElementById("userNameInput"),
+        userAvatar: document.getElementById("userAvatar"),
+        userAvatarMobile: document.getElementById("userAvatarMobile"),
+        userNameMobile: document.getElementById("userNameMobile"),
+        connectionStatus: document.getElementById("connectionStatus"),
+        workspaceSelector: document.getElementById("workspaceSelector"),
+        offlineIndicator: document.getElementById("offlineIndicator"),
+        currentChannelName: document.getElementById("currentChannelName"),
+        channelDescription: document.getElementById("channelDescription"),
+        membersList: document.getElementById("membersList"),
+        membersListMobile: document.getElementById("membersListMobile"),
+        membersCount: document.getElementById("membersCount"),
+        membersCountMobile: document.getElementById("membersCountMobile"),
+        settingsMenu: document.getElementById("settingsMenu"),
+      };
 
-        currentUser = username;
-        localStorage.setItem("chatflow_username", username);
-        
-        // Update UI
-        document.getElementById("currentUserName").textContent = username;
-        document.getElementById("userAvatarLeft").textContent = username.charAt(0).toUpperCase();
-        
-        // Hide welcome screen
-        welcomeScreen.classList.remove("active");
-        messageInput.focus();
+      // ============================================
+      // Responsive Utilities
+      // ============================================
+      const responsive = {
+        init() {
+          this.handleResize();
+          window.addEventListener("resize", () => this.handleResize());
+        },
 
-        // Add user to members list
-        addMemberToList(username, true);
-      }
+        handleResize() {
+          const width = window.innerWidth;
+          const menuBtn = document.querySelector(".menu-btn");
+          const membersToggleBtn = document.querySelector(
+            ".members-toggle-btn",
+          );
+          const topBar = document.querySelector(".top-bar");
 
-      // WebSocket message handler
-      ws.onmessage = (e) => {
-        if (messageCount === 0) {
-          messagesContainer.innerHTML = "";
-        }
-        messageCount++;
-
-        const messageData = e.data;
-        const colonIndex = messageData.indexOf(':');
-        
-        if (colonIndex > 0) {
-          const username = messageData.substring(0, colonIndex).trim();
-          const message = messageData.substring(colonIndex + 1).trim();
-          
-          addMessage(username, message);
-          
-          // Add user to online list if not exists
-          if (!onlineUsers.has(username) && username !== currentUser) {
-            addMemberToList(username, true);
+          // Show/hide menu button
+          if (width <= 960) {
+            if (menuBtn) menuBtn.style.display = "flex";
+            ui.closeMobileSidebar();
+          } else {
+            if (menuBtn) menuBtn.style.display = "none";
+            ui.closeMobileSidebar();
           }
-        }
+
+          // Show/hide members toggle button
+          if (width <= 1200) {
+            if (membersToggleBtn) membersToggleBtn.style.display = "flex";
+          } else {
+            if (membersToggleBtn) membersToggleBtn.style.display = "none";
+            ui.closeMembersPanel();
+          }
+
+          // Adjust top bar padding
+          if (width <= 640) {
+            if (topBar) topBar.style.padding = "0.75rem 0.75rem";
+          } else {
+            if (topBar) topBar.style.padding = "0.75rem 1rem";
+          }
+
+          // Adjust text visibility based on screen size
+          this.adjustTextVisibility(width);
+        },
+
+        adjustTextVisibility(width) {
+          const appTitle = document.querySelector(".app-title");
+          const workspaceText = document.querySelector(".workspace-text");
+          const channelDesc = document.querySelector(".channel-desc");
+
+          if (width <= 480) {
+            // Extra small - hide most text
+            if (appTitle) appTitle.style.display = "none";
+            if (workspaceText) workspaceText.style.display = "none";
+            if (channelDesc) channelDesc.style.display = "none";
+          } else if (width <= 640) {
+            // Small mobile - show app title
+            if (appTitle) {
+              appTitle.style.display = "";
+              appTitle.style.fontSize = "1rem";
+            }
+            if (workspaceText) workspaceText.style.display = "none";
+            if (channelDesc) channelDesc.style.display = "none";
+          } else if (width <= 768) {
+            // Medium mobile
+            if (appTitle) {
+              appTitle.style.display = "";
+              appTitle.style.fontSize = "1.125rem";
+            }
+            if (workspaceText) workspaceText.style.display = "none";
+            if (channelDesc) channelDesc.style.display = "none";
+          } else {
+            // Desktop
+            if (appTitle) {
+              appTitle.style.display = "";
+              appTitle.style.fontSize = "1.125rem";
+            }
+            if (workspaceText) workspaceText.style.display = "";
+            if (channelDesc) channelDesc.style.display = "";
+          }
+
+          // Adjust button sizes
+          const buttons = document.querySelectorAll(
+            ".search-btn, .notif-btn, .help-btn, .pin-btn, .members-btn, .menu-btn, .members-toggle-btn",
+          );
+          if (width <= 640) {
+            buttons.forEach((btn) => {
+              btn.style.width = "2.5rem";
+              btn.style.height = "2.5rem";
+              btn.style.fontSize = "1.125rem";
+            });
+          } else {
+            buttons.forEach((btn) => {
+              btn.style.width = "2.5rem";
+              btn.style.height = "2.5rem";
+              btn.style.fontSize = "1.25rem";
+            });
+          }
+
+          // Adjust padding
+          const channelHeader = document.querySelector(".channel-header");
+          const messageArea = document.querySelector(".message-area");
+          const messageInputArea = document.querySelector(
+            ".message-input-area",
+          );
+
+          if (width <= 640) {
+            if (channelHeader) {
+              channelHeader.style.padding = "0.75rem 1rem";
+            }
+            if (messageArea) {
+              messageArea.style.padding = "1rem";
+            }
+            if (messageInputArea) {
+              messageInputArea.style.padding = "1rem";
+            }
+          } else {
+            if (channelHeader) {
+              channelHeader.style.padding = "1rem 1.5rem";
+            }
+            if (messageArea) {
+              messageArea.style.padding = "1.5rem";
+            }
+            if (messageInputArea) {
+              messageInputArea.style.padding = "1.25rem 1.5rem";
+            }
+          }
+        },
       };
 
-      // Add message to chat
-      function addMessage(username, text) {
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message";
-        
-        const now = new Date();
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        messageDiv.innerHTML = `
-          <div class="message-avatar">${username.charAt(0).toUpperCase()}</div>
-          <div class="message-content">
-            <div class="message-header">
-              <span class="message-author">${username}</span>
-              <span class="message-time">${timeString}</span>
+      // ============================================
+      // Utility Functions
+      // ============================================
+      const utils = {
+        escapeHtml(text) {
+          const div = document.createElement("div");
+          div.textContent = text;
+          return div.innerHTML;
+        },
+
+        getInitial(username) {
+          return username.charAt(0).toUpperCase();
+        },
+
+        getTimestamp() {
+          return new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        },
+
+        smoothScrollToBottom(container) {
+          requestAnimationFrame(() => {
+            container.scrollTop = container.scrollHeight;
+          });
+        },
+      };
+
+      // ============================================
+      // WebSocket Management
+      // ============================================
+      const websocket = {
+        connect() {
+          try {
+            if (state.ws) state.ws.close();
+
+            state.ws = new WebSocket(CONFIG.WS_URL);
+
+            state.ws.onopen = () => {
+              state.isConnected = true;
+              state.reconnectAttempts = 0;
+              ui.updateConnectionStatus(true);
+
+              // Announce user connection to server
+              if (state.currentUser) {
+                try {
+                  state.ws.send(`SYSTEM:USER_CONNECTED:${state.currentUser}`);
+                } catch (error) {
+                  // Silent fail
+                }
+              }
+            };
+
+            state.ws.onmessage = this.handleMessage;
+
+            state.ws.onclose = () => {
+              // Announce disconnection before closing
+              if (
+                state.isConnected &&
+                state.currentUser &&
+                state.ws?.readyState === WebSocket.OPEN
+              ) {
+                try {
+                  state.ws.send(
+                    `SYSTEM:USER_DISCONNECTED:${state.currentUser}`,
+                  );
+                } catch (error) {
+                  // Silent fail
+                }
+              }
+
+              state.isConnected = false;
+              ui.updateConnectionStatus(false);
+
+              if (state.shouldStayConnected && state.currentUser) {
+                state.reconnectAttempts++;
+                state.reconnectTimeout = setTimeout(
+                  () => this.connect(),
+                  CONFIG.RECONNECT_DELAY,
+                );
+              }
+            };
+
+            state.ws.onerror = () => ui.updateConnectionStatus(false);
+          } catch (error) {
+            ui.updateConnectionStatus(false);
+            if (state.shouldStayConnected && state.currentUser) {
+              state.reconnectAttempts++;
+              state.reconnectTimeout = setTimeout(
+                () => this.connect(),
+                CONFIG.RECONNECT_DELAY,
+              );
+            }
+          }
+        },
+
+        disconnect() {
+          state.shouldStayConnected = false;
+
+          // Announce disconnection
+          if (state.ws?.readyState === WebSocket.OPEN && state.currentUser) {
+            try {
+              state.ws.send(`SYSTEM:USER_DISCONNECTED:${state.currentUser}`);
+            } catch (error) {
+              // Silent fail
+            }
+          }
+
+          if (state.reconnectTimeout) {
+            clearTimeout(state.reconnectTimeout);
+            state.reconnectTimeout = null;
+          }
+
+          if (state.ws) {
+            state.ws.close(1000, "User disconnected");
+          }
+        },
+
+        handleMessage(e) {
+          // Handle system messages for connection status
+          if (e.data.startsWith("SYSTEM:")) {
+            const systemMsg = e.data.substring(7).trim();
+
+            // User connected
+            if (systemMsg.startsWith("USER_CONNECTED:")) {
+              const username = systemMsg.substring(15).trim();
+              if (
+                username !== state.currentUser &&
+                !state.onlineUsers.has(username)
+              ) {
+                members.add(username);
+                ui.addSystemMessage(`${username} joined the chat`);
+              }
+              return;
+            }
+
+            // User disconnected
+            if (systemMsg.startsWith("USER_DISCONNECTED:")) {
+              const username = systemMsg.substring(18).trim();
+              if (
+                username !== state.currentUser &&
+                state.onlineUsers.has(username)
+              ) {
+                members.remove(username);
+                ui.addSystemMessage(`${username} left the chat`);
+              }
+              return;
+            }
+
+            return;
+          }
+
+          // Clear welcome message on first real message
+          if (state.messageCount === 0) {
+            elements.messagesContainer.innerHTML = "";
+          }
+
+          // Handle regular chat messages
+          const colonIndex = e.data.indexOf(":");
+          if (colonIndex > 0) {
+            const username = e.data.substring(0, colonIndex).trim();
+            const text = e.data.substring(colonIndex + 1).trim();
+
+            state.messageCount++;
+            ui.addMessage(username, text);
+
+            // Add user to online list if not already there
+            if (
+              !state.onlineUsers.has(username) &&
+              username !== state.currentUser
+            ) {
+              members.add(username);
+            }
+          }
+        },
+
+        send(text) {
+          if (state.isConnected && state.ws?.readyState === WebSocket.OPEN) {
+            try {
+              state.ws.send(`${state.currentUser}: ${text}`);
+            } catch (error) {
+              ui.addMessage(state.currentUser, text);
+            }
+          } else {
+            ui.addMessage(state.currentUser, text);
+          }
+        },
+      };
+
+      // ============================================
+      // UI Updates
+      // ============================================
+      const ui = {
+        updateConnectionStatus(connected) {
+          if (connected) {
+            elements.connectionStatus.classList.remove("bg-red-500");
+            elements.connectionStatus.classList.add("bg-green-500");
+            elements.connectionStatus.title = "Connected";
+            elements.workspaceSelector.style.cursor = "default";
+            elements.offlineIndicator?.classList.remove("flex");
+            elements.offlineIndicator?.classList.add("hidden");
+          } else {
+            elements.connectionStatus.classList.remove("bg-green-500");
+            elements.connectionStatus.classList.add("bg-red-500");
+            elements.connectionStatus.title =
+              "Disconnected - Click to reconnect";
+            elements.workspaceSelector.style.cursor = "pointer";
+            if (elements.offlineIndicator && state.currentUser) {
+              elements.offlineIndicator.classList.remove("hidden");
+              elements.offlineIndicator.classList.add("flex");
+            }
+          }
+        },
+
+        addMessage(username, text) {
+          const messageDiv = document.createElement("div");
+          const isMobile = window.innerWidth <= 640;
+
+          messageDiv.className =
+            "flex gap-3 px-3 py-2 rounded-xl transition-all hover-bg-secondary animate-slide-up flex-shrink-0";
+          if (isMobile) {
+            messageDiv.className += " gap-2 px-2 py-2";
+          }
+
+          const avatarSize = isMobile ? "w-9 h-9" : "w-10 h-10";
+          const textSize = isMobile ? "text-sm" : "text-base";
+
+          messageDiv.innerHTML = `
+            <div class="${avatarSize} rounded-lg accent-gradient flex items-center justify-center font-bold text-white flex-shrink-0">${utils.getInitial(username)}</div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-baseline gap-2 mb-1">
+                <span class="font-bold ${textSize} text-primary">${utils.escapeHtml(username)}</span>
+                <span class="text-xs text-tertiary font-mono">${utils.getTimestamp()}</span>
+              </div>
+              <div class="text-secondary ${textSize} leading-relaxed break-words">${utils.escapeHtml(text)}</div>
             </div>
-            <div class="message-text">${text}</div>
-          </div>
-        `;
-        
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }
+          `;
+          elements.messagesContainer.appendChild(messageDiv);
+          utils.smoothScrollToBottom(elements.messagesContainer);
+        },
 
-      // Send message
-      function sendMessage() {
-        if (!currentUser) {
-          welcomeScreen.classList.add("active");
-          welcomeNameInput.focus();
-          return;
-        }
+        addSystemMessage(text) {
+          const messageDiv = document.createElement("div");
+          messageDiv.className =
+            "flex items-center justify-center py-2 animate-slide-up";
+          messageDiv.innerHTML = `
+            <div class="text-xs text-tertiary px-3 py-1.5 bg-elevated rounded-full opacity-70">
+              ${utils.escapeHtml(text)}
+            </div>
+          `;
+          elements.messagesContainer.appendChild(messageDiv);
+          utils.smoothScrollToBottom(elements.messagesContainer);
+        },
 
-        const message = messageInput.value.trim();
-        if (!message) return;
+        updateUserDisplay(username) {
+          elements.userNameDisplay.textContent = username;
+          elements.userNameMobile.textContent = username;
+          elements.userAvatar.textContent = utils.getInitial(username);
+          elements.userAvatarMobile.textContent = utils.getInitial(username);
+        },
 
-        ws.send(`${currentUser}: ${message}`);
-        messageInput.value = "";
-        messageInput.focus();
-      }
+        switchChannel(channelName, description = "", element) {
+          state.currentChannel = channelName;
+          elements.currentChannelName.textContent = channelName;
+          elements.channelDescription.textContent = description;
+          elements.messageInput.placeholder = `Message #${channelName}`;
 
-      // Enter key to send
-      messageInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          sendMessage();
-        }
-      });
+          document.querySelectorAll(".channel-item").forEach((item) => {
+            item.classList.remove(
+              "active",
+              "bg-elevated",
+              "text-primary",
+              "font-semibold",
+            );
+          });
+          if (element) {
+            element.classList.add(
+              "active",
+              "bg-elevated",
+              "text-primary",
+              "font-semibold",
+            );
+          }
 
-      // Welcome screen enter key
-      welcomeNameInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          joinChat();
-        }
-      });
+          this.closeMobileSidebar();
+        },
 
-      // Add member to list
-      function addMemberToList(username, isOnline) {
-        if (onlineUsers.has(username)) return;
-        
-        onlineUsers.add(username);
-        const membersList = document.getElementById("membersList");
-        
-        // Find or create online category
-        let onlineCategory = membersList.querySelector('.member-category');
-        if (!onlineCategory) {
-          onlineCategory = document.createElement('div');
-          onlineCategory.className = 'member-category';
-          onlineCategory.innerHTML = '<div class="member-category-title">Online — 0</div>';
-          membersList.appendChild(onlineCategory);
-        }
+        toggleMobileSidebar() {
+          elements.sidebarLeftMobile.classList.toggle("open");
+          elements.mobileOverlay.classList.toggle("hidden");
+          elements.mobileOverlay.classList.toggle("animate-fade-in");
 
-        const memberItem = document.createElement("div");
-        memberItem.className = "member-item";
-        memberItem.innerHTML = `
-          <div class="member-avatar-wrapper">
-            <div class="member-avatar">${username.charAt(0).toUpperCase()}</div>
-            <div class="member-status"></div>
-          </div>
-          <div class="member-name">${username}</div>
-        `;
-        
-        onlineCategory.appendChild(memberItem);
-        
-        // Update count
-        const count = onlineUsers.size;
-        membersList.querySelector('.member-category-title').textContent = `Online — ${count}`;
-        document.getElementById('membersCount').textContent = `${count} Online`;
-      }
+          if (elements.sidebarLeftMobile.classList.contains("open")) {
+            this.closeMembersPanel();
+          }
+        },
 
-      // Switch channel
-      function switchChannel(channelName) {
-        currentChannel = channelName;
-        document.getElementById("currentChannelName").textContent = channelName;
-        messageInput.placeholder = `Message #${channelName}`;
-        
-        // Update active state
-        document.querySelectorAll('.channel-item').forEach(item => {
-          item.classList.remove('active');
+        closeMobileSidebar() {
+          elements.sidebarLeftMobile.classList.remove("open");
+          elements.mobileOverlay.classList.add("hidden");
+        },
+
+        toggleMembersPanel() {
+          elements.membersPanel.classList.toggle("open");
+          elements.mobileOverlay.classList.toggle("hidden");
+          elements.mobileOverlay.classList.toggle("animate-fade-in");
+
+          if (elements.membersPanel.classList.contains("open")) {
+            this.closeMobileSidebar();
+          }
+        },
+
+        closeMembersPanel() {
+          elements.membersPanel.classList.remove("open");
+          elements.mobileOverlay.classList.add("hidden");
+        },
+      };
+
+      // ============================================
+      // Member Management
+      // ============================================
+      const members = {
+        add(username) {
+          if (state.onlineUsers.has(username)) return;
+
+          state.onlineUsers.add(username);
+
+          // Add to desktop list
+          this.addToList(elements.membersList, username);
+
+          // Add to mobile list
+          this.addToList(elements.membersListMobile, username);
+
+          this.updateCount();
+        },
+
+        addToList(container, username) {
+          let memberGroup = container.querySelector(".mb-4");
+
+          if (!memberGroup) {
+            memberGroup = document.createElement("div");
+            memberGroup.className = "mb-4";
+            memberGroup.innerHTML =
+              '<div class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2">Online — 0</div>';
+            container.appendChild(memberGroup);
+          }
+
+          const memberItem = document.createElement("div");
+          memberItem.className =
+            "flex items-center gap-2.5 px-3 py-2 m-0.5 rounded-lg cursor-pointer transition-all hover-bg-tertiary";
+          memberItem.dataset.username = username;
+          memberItem.innerHTML = `
+            <div class="relative">
+              <div class="w-8 h-8 rounded-lg accent-gradient flex items-center justify-center text-sm font-bold text-white">${utils.getInitial(username)}</div>
+              <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-secondary rounded-full"></div>
+            </div>
+            <div class="text-sm font-medium text-secondary">${utils.escapeHtml(username)}</div>
+          `;
+
+          memberGroup.appendChild(memberItem);
+        },
+
+        remove(username) {
+          const memberItems = document.querySelectorAll(
+            `[data-username="${username}"]`,
+          );
+          memberItems.forEach((item) => item.remove());
+          state.onlineUsers.delete(username);
+          this.updateCount();
+        },
+
+        updateCount() {
+          const count = state.onlineUsers.size;
+
+          const titles = document.querySelectorAll(".text-11");
+          titles.forEach((title) => {
+            if (title.textContent.includes("Online")) {
+              title.textContent = `Online — ${count}`;
+            }
+          });
+
+          elements.membersCount.textContent = `${count} Online`;
+          elements.membersCountMobile.textContent = `${count} Online`;
+        },
+
+        clear() {
+          const clearList = (container) => {
+            container.innerHTML =
+              '<div class="mb-4"><div class="text-11 font-bold uppercase tracking-wide text-tertiary px-3 py-2">Online — 0</div></div>';
+          };
+
+          clearList(elements.membersList);
+          clearList(elements.membersListMobile);
+          state.onlineUsers.clear();
+        },
+      };
+
+      // ============================================
+      // Actions
+      // ============================================
+      const actions = {
+        joinChat() {
+          const username = elements.welcomeUsernameInput.value.trim();
+
+          if (!username) {
+            elements.welcomeUsernameInput.classList.add("border-red-500");
+            elements.welcomeUsernameInput.focus();
+            setTimeout(() => {
+              elements.welcomeUsernameInput.classList.remove("border-red-500");
+            }, 2000);
+            return;
+          }
+
+          state.currentUser = username;
+          localStorage.setItem(CONFIG.STORAGE_KEY, username);
+
+          ui.updateUserDisplay(username);
+          elements.welcomeModal.classList.add("hidden");
+          elements.messageInput.focus();
+          members.add(username);
+
+          if (!state.wsInitialized) {
+            state.wsInitialized = true;
+            state.shouldStayConnected = true;
+            websocket.connect();
+          }
+        },
+
+        sendMessage() {
+          if (!state.currentUser) {
+            elements.welcomeModal.classList.remove("hidden");
+            elements.welcomeUsernameInput.focus();
+            return;
+          }
+
+          const text = elements.messageInput.value.trim();
+          if (!text) return;
+
+          websocket.send(text);
+          elements.messageInput.value = "";
+          elements.messageInput.focus();
+        },
+
+        saveUsername() {
+          const newUsername = elements.userNameInput.value.trim();
+
+          if (!newUsername || newUsername === state.currentUser) {
+            elements.userNameInput.classList.add("hidden");
+            elements.userNameDisplay.style.display = "";
+            return;
+          }
+
+          const oldUsername = state.currentUser;
+          state.currentUser = newUsername;
+          localStorage.setItem(CONFIG.STORAGE_KEY, newUsername);
+
+          ui.updateUserDisplay(newUsername);
+          members.remove(oldUsername);
+          members.add(newUsername);
+
+          elements.userNameInput.classList.add("hidden");
+          elements.userNameDisplay.style.display = "";
+        },
+
+        logout() {
+          if (!confirm("Are you sure you want to logout?")) return;
+
+          websocket.disconnect();
+          state.currentUser = "";
+          state.messageCount = 0;
+          members.clear();
+
+          elements.messagesContainer.innerHTML = `
+            <div class="flex-1 flex flex-col items-center justify-center gap-4 p-10">
+              <div class="text-6xl opacity-30 animate-float">💬</div>
+              <div class="text-2xl font-bold text-primary">Welcome to #general</div>
+              <div class="text-base text-tertiary text-center leading-relaxed">This is the beginning of your conversation.<br>Say hello to get started!</div>
+            </div>
+          `;
+
+          ui.updateUserDisplay("Guest");
+          elements.settingsMenu.classList.add("hidden");
+          elements.settingsMenu.classList.remove("block");
+          elements.welcomeModal.classList.remove("hidden");
+          elements.welcomeUsernameInput.value = "";
+          elements.welcomeUsernameInput.focus();
+
+          state.wsInitialized = false;
+          state.shouldStayConnected = false;
+        },
+      };
+
+      // ============================================
+      // Event Listeners
+      // ============================================
+      function initializeEventListeners() {
+        // Button clicks
+        document
+          .getElementById("joinChatBtn")
+          .addEventListener("click", actions.joinChat);
+        elements.sendBtn.addEventListener("click", actions.sendMessage);
+        document
+          .getElementById("menuToggleBtn")
+          .addEventListener("click", ui.toggleMobileSidebar);
+        document
+          .getElementById("membersToggleBtn")
+          .addEventListener("click", ui.toggleMembersPanel);
+        document
+          .getElementById("membersBtn")
+          .addEventListener("click", ui.toggleMembersPanel);
+        document
+          .getElementById("closeSidebarBtn")
+          .addEventListener("click", ui.closeMobileSidebar);
+        document
+          .getElementById("closeMembersBtn")
+          .addEventListener("click", ui.closeMembersPanel);
+        document
+          .getElementById("editUsernameBtn")
+          .addEventListener("click", () => {
+            elements.settingsMenu.classList.add("hidden");
+            elements.settingsMenu.classList.remove("block");
+            elements.userNameDisplay.click();
+          });
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", actions.logout);
+
+        // Settings menu toggle
+        document
+          .getElementById("settingsBtn")
+          .addEventListener("click", (e) => {
+            e.stopPropagation();
+            elements.settingsMenu.classList.toggle("hidden");
+            elements.settingsMenu.classList.toggle("block");
+          });
+
+        // Close settings menu when clicking outside
+        document.addEventListener("click", (e) => {
+          const settingsBtn = document.getElementById("settingsBtn");
+          if (
+            !settingsBtn.contains(e.target) &&
+            !elements.settingsMenu.contains(e.target)
+          ) {
+            elements.settingsMenu.classList.add("hidden");
+            elements.settingsMenu.classList.remove("block");
+          }
         });
-        event.currentTarget.classList.add('active');
+
+        // Reconnect on workspace click
+        elements.workspaceSelector.addEventListener("click", () => {
+          if (!state.isConnected && state.currentUser) {
+            state.reconnectAttempts = 0;
+            state.shouldStayConnected = true;
+            websocket.connect();
+          }
+        });
+
+        // Channel switching
+        document.querySelectorAll(".channel-item").forEach((item) => {
+          item.addEventListener("click", function () {
+            const channelName = this.dataset.channel;
+            const description = this.dataset.description;
+            if (channelName) ui.switchChannel(channelName, description, this);
+          });
+        });
+
+        // Username editing
+        elements.userNameDisplay.addEventListener("click", function () {
+          if (!state.currentUser) return;
+          elements.userNameInput.value = state.currentUser;
+          elements.userNameDisplay.style.display = "none";
+          elements.userNameInput.classList.remove("hidden");
+          elements.userNameInput.focus();
+          elements.userNameInput.select();
+        });
+
+        elements.userNameInput.addEventListener("blur", actions.saveUsername);
+        elements.userNameInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            actions.saveUsername();
+          }
+          if (e.key === "Escape") {
+            elements.userNameInput.classList.add("hidden");
+            elements.userNameDisplay.style.display = "";
+          }
+        });
+
+        // Mobile overlay
+        elements.mobileOverlay.addEventListener("click", () => {
+          ui.closeMobileSidebar();
+          ui.closeMembersPanel();
+        });
+
+        // Keyboard shortcuts
+        elements.messageInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            actions.sendMessage();
+          }
+        });
+
+        elements.welcomeUsernameInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            actions.joinChat();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            ui.closeMobileSidebar();
+            ui.closeMembersPanel();
+          }
+        });
+
+        // Cleanup on unload
+        window.addEventListener("beforeunload", websocket.disconnect);
       }
 
-      // Mobile sidebar toggle
-      function toggleMobileSidebar() {
-        const sidebar = document.getElementById("sidebarLeft");
-        const overlay = document.getElementById("mobileOverlay");
-        sidebar.classList.toggle("mobile-open");
-        overlay.classList.toggle("active");
-      }
-
-      // Connection status
-      ws.onopen = () => {
-        document.getElementById("connectionStatus").textContent = "Connected";
-      };
-
-      ws.onclose = () => {
-        document.getElementById("connectionStatus").textContent = "Disconnected";
-        document.querySelector(".status-dot").style.background = "#ed4245";
-      };
-
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
-
-      // Mobile menu button visibility
-      if (window.innerWidth <= 768) {
-        document.getElementById("mobileMenuBtn").style.display = "flex";
-      }
-
-      window.addEventListener('resize', () => {
-        if (window.innerWidth <= 768) {
-          document.getElementById("mobileMenuBtn").style.display = "flex";
-        } else {
-          document.getElementById("mobileMenuBtn").style.display = "none";
+      // ============================================
+      // Initialization
+      // ============================================
+      function initialize() {
+        // Load saved username
+        const savedUsername = localStorage.getItem(CONFIG.STORAGE_KEY);
+        if (savedUsername) {
+          elements.welcomeUsernameInput.value = savedUsername;
         }
-      });
+
+        initializeEventListeners();
+        responsive.init();
+      }
+
+      // Start the app
+      initialize();
     </script>
   </body>
 </html>
